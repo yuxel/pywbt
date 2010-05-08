@@ -34,7 +34,12 @@ class PyWBT:
     def __init__(self):
         options, args, urlData = self.parseOptions()
 
-        numOfRequestBlocks = int(options.numberOfRequests / options.concurentRequestCount)
+
+        numOfRequestBlocks = float(options.numberOfRequests) / float(options.concurentRequestCount)
+
+        """ FIXME : its too complicated here, need to be simplified """
+        requestBlockLimit = int(math.ceil( numOfRequestBlocks ))
+        numOfRequestBlocks = int(numOfRequestBlocks)
         numOfRequestsForLastBlock = (options.numberOfRequests % options.concurentRequestCount)
 
         startTime = time.time()
@@ -43,8 +48,8 @@ class PyWBT:
 
         threadList = {}
 
-        for requestBlock in range(0, numOfRequestBlocks + 1):
-            
+        for requestBlock in range(0, requestBlockLimit ):
+
             threadList[requestBlock] = []
 
             concurentRequestCount = options.concurentRequestCount
