@@ -90,8 +90,10 @@ class PyWBT:
     def parseOptions(self):
         usage = "usage: %prog -n numberOfRequests -c concurentRequestCount http://URL"
         parser = OptionParser(usage=usage, version=__appName__+" "+__version__)
-        parser.add_option("-n", "--numberOfRequests", action="store", type="int", default=1, dest="numberOfRequests", help="input number of requests to URL")
-        parser.add_option("-c", "--concurentRequestCount", action="store", type="int", default=1, dest="concurentRequestCount", help="input disk path")
+        parser.add_option("-n", "--numberOfRequests", action="store", type="int", 
+                          default=1, dest="numberOfRequests", help="input number of requests to URL")
+        parser.add_option("-c", "--concurentRequestCount", action="store", type="int", 
+                          default=1, dest="concurentRequestCount", help="input number of concurent requests")
         (options, args) = parser.parse_args()
 
         """ only one url """
