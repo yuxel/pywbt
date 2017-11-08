@@ -29,7 +29,7 @@ from optparse import OptionParser
 
 if (sys.version_info > (3, 0)):
     from urllib.parse import urlparse
-    import http.client
+    import http.client as httplib
 else:
     from urlparse import urlparse
     import httplib
