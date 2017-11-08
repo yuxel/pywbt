@@ -22,10 +22,18 @@ Osman Yuksel <yuxel |ET| sonsuzdongu (DOT).com
 __appName__ = "Python Web Benchark Tool"
 __version__ = '0.0.1'
 
+import sys
+import time, math
 from threading import Thread
 from optparse import OptionParser
-from urlparse import urlparse
-import httplib, time, sys, math
+
+if (sys.version_info > (3, 0)):
+    from urllib.parse import urlparse
+    import http.client
+else:
+    from urlparse import urlparse
+    import httplib
+
 
 
 class PyWBT:
@@ -70,12 +78,12 @@ class PyWBT:
                         requestSucceed = requestSucceed + 1
                     else:
                         requestFailed = requestFailed + 1
-                except Exception, error:
-                    print error;
+                except Exception:
+                    print(sys.exc_info())
 
             startFrom = requestBlock * options.concurentRequestCount
             endTo = startFrom + concurentRequestCount
-            print " > Requests between ", startFrom, "and", endTo ," sent"
+            print(" > Requests between ", startFrom, "and", endTo ," sent")
        
         # end time tracker
         endTime = time.time()
@@ -84,11 +92,11 @@ class PyWBT:
         """ print results """
         totalRequstTime = endTime - startTime
         perRequst = totalRequstTime / options.numberOfRequests
-        print " ------------------------------------------------- "
+        print(" ------------------------------------------------- ")
         
-        print "Process took ", totalRequstTime , "seconds (", perRequst, " per/request)"
-        print "Number of succeeded requests " , requestSucceed
-        print "Number of failed requests " , requestFailed
+        print("Process took ", totalRequstTime , "seconds (", perRequst, " per/request)")
+        print("Number of succeeded requests " , requestSucceed)
+        print("Number of failed requests " , requestFailed)
 
 
     """ print usage and help """
@@ -139,7 +147,7 @@ class PyWBThread(Thread):
             response = connection.getresponse()
             connection.close()
             self.completed = True
-        except Exception, error:
+        except Exception:
             self.completed = False
 
 
