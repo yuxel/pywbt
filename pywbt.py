@@ -113,13 +113,15 @@ class PyWBT:
         if len(args) != 1:
             parser.error('You have to specify a URL')
         else:
+            wrong_url = 'You have to specify valid URL starts with http:// or https://'
             """  check if url is valid 
                  TODO: bad """
             url = urlparse(args[0])
-            if  url.scheme != "http":
-                parser.error('You have to specify valid URL starts with http://')
+
+            if  url.scheme not in ["https", "http"]:
+                parser.error(wrong_url)
             elif len(url.netloc) < 1:
-                parser.error('You have to specify valid URL starts with http://')
+                parser.error(wrong_url)
 
 
         """ get url and query string """
@@ -127,8 +129,11 @@ class PyWBT:
         if  url.path or url.params:
             queryString = url.path + "?" + url.params
 
-        urlData = {"host": url.netloc,
-                   "queryString" : queryString}
+        urlData = {
+                   "host": url.netloc,
+                   "queryString" : queryString,
+                   "protocol": url.scheme
+                   }
                    
         return options, args, urlData
 
@@ -139,10 +144,14 @@ class PyWBThread(Thread):
         Thread.__init__(self)
         self.host = urlData['host']
         self.queryString = urlData['queryString']
+        self.protocol = urlData['protocol']
         self.count = count
     def run(self):
         try:
-            connection = httplib.HTTPConnection(self.host)
+            if self.protocol == 'http':
+                connection = httplib.HTTPConnection(self.host)
+            else:
+                connection = httplib.HTTPSConnection(self.host)
             connection.request("GET", self.queryString)
             response = connection.getresponse()
             connection.close()
